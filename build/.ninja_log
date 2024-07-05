@@ -1,9 +1,0 @@
-# ninja log v5
-2	30	1720177932129278654	Blockchain/CMakeFiles/blockchain.dir/Transaction.cpp.o	ca900930914b579f
-1	1236	1720177933337310986	Utilities/CMakeFiles/utilities.dir/CryptoUtilities.cpp.o	de72b319c7cae3d2
-2	1273	1720177933373311950	Blockchain/CMakeFiles/blockchain.dir/Block.cpp.o	fe64649718e15cc2
-2	612	1720177973518386951	Utilities/libutilities.a	480bc120a60a6fcd
-2	1045	1720177973966398953	Blockchain/CMakeFiles/blockchain.dir/Block.cpp.o	fe64649718e15cc2
-2	1165	1720177974086402168	CMakeFiles/test.dir/CumTon/test.cpp.o	c01a7d879615bfd6
-1045	1256	1720177974162404204	Blockchain/libblockchain.a	6f273e8b0c5f2586
-1165	1448	1720177974370409777	test	b053ffc98318e691

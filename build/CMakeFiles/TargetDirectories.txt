@@ -1,9 +1,0 @@
-/home/sergei/prog/cpp_prog/cumton/build/CMakeFiles/test.dir
-/home/sergei/prog/cpp_prog/cumton/build/CMakeFiles/edit_cache.dir
-/home/sergei/prog/cpp_prog/cumton/build/CMakeFiles/rebuild_cache.dir
-/home/sergei/prog/cpp_prog/cumton/build/Utilities/CMakeFiles/utilities.dir
-/home/sergei/prog/cpp_prog/cumton/build/Utilities/CMakeFiles/edit_cache.dir
-/home/sergei/prog/cpp_prog/cumton/build/Utilities/CMakeFiles/rebuild_cache.dir
-/home/sergei/prog/cpp_prog/cumton/build/Blockchain/CMakeFiles/blockchain.dir
-/home/sergei/prog/cpp_prog/cumton/build/Blockchain/CMakeFiles/edit_cache.dir
-/home/sergei/prog/cpp_prog/cumton/build/Blockchain/CMakeFiles/rebuild_cache.dir
