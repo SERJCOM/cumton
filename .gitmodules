@@ -1,0 +1,3 @@
+[submodule "libraries/FastBinaryEncoding"]
+	path = libraries/FastBinaryEncoding
+	url = https://github.com/chronoxor/FastBinaryEncoding.git

@@ -31,15 +31,13 @@ namespace cumton::transaction
     struct Transaction
     {
         int32_t version;
-        uint32_t inpuc_count;
         std::vector<InputTransaction> input;
-        uint32_t output_count;
         std::vector<OutputTransaction> output;
 
         friend std::ostream &operator<<(std::ostream &stream, Transaction &tx)
         {
             stream << "version: " << tx.version << "\n";
-            stream << "inpuc_count: " << tx.inpuc_count << "\n";
+            stream << "inpuc_count: " << tx.input.size() << "\n";
 
             for (InputTransaction &i : tx.input)
             {

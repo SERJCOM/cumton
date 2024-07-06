@@ -2,11 +2,13 @@
 
 #include "Blockchain/Block.hpp"
 #include "Utilities/CryptoUtilities.h"
+#include "Blockchain/Blockchain.hpp"
 
 using namespace std;
 
 int main()
 {
+    cumton::blockchain::BlockChain chain();
 
     cumton::blockchain::Block block;
     block.bits = 5;

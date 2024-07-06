@@ -2,13 +2,27 @@
 
 #include <cstdint>
 #include <array>
+#include <filesystem>
+#include <vector>
+#include <map>
+#include <array>
+
+#include "Block.hpp"
 
 namespace cumton::blockchain
 {
 
-    struct Blockchain
+    class BlockChain
     {
-        int32_t version;
+    public:
+        BlockChain();
+        
+
+
+
+    private:
+
+        std::map<std::array<uint8_t, 32>, std::vector<Block>> blockchain_db;
 
     };
 

@@ -1,4 +1,4 @@
-//Cryptocurrency Unified Monetary Token for Online Networks - CUMTON
+// Cryptocurrency Unified Monetary Token for Online Networks - CUMTON
 
 #pragma once
 
@@ -6,6 +6,9 @@
 #include <array>
 #include "Transaction.hpp"
 #include <iostream>
+#include <string>
+#include <filesystem>
+
 #include "Utilities/CryptoUtilities.h"
 
 namespace cumton::blockchain
@@ -32,10 +35,11 @@ namespace cumton::blockchain
               uint64_t block_number) : version(version), prev_block(std::move(prev_block)), timestap(timestap), bits(bits),
                                        nonce(nonce), block_number(block_number) {}
 
-        void AddTransaction(const transaction::Transaction &transaction)
-        {
-            transactions.push_back(transaction);
-        }
+        void AddTransaction(const transaction::Transaction &transaction);
+
+        void SaveBlockToFile(std::filesystem::path path);
+
+        void LoadBlockFromFile(std::filesystem::path path);
 
         friend std::ostream &operator<<(std::ostream &stream, Block &block)
         {
