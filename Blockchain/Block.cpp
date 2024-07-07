@@ -2,12 +2,6 @@
 #include "Utilities/CodeGeneration/proto_models.h"
 #include <fstream>
 
-void cumton::blockchain::Block::CalculateBlockHash()
-{
-    auto bytes = GetBlockBytes();
-    block_hash = utilities::crypto::sha256(bytes);
-}
-
 void cumton::blockchain::Block::AddTransaction(const transaction::Transaction &transaction)
 {
     transactions.push_back(transaction);
@@ -61,6 +55,31 @@ std::vector<uint8_t> cumton::blockchain::Block::GetBlockBytes()
     }
 
     return res;
+}
+
+std::array<uint8_t, 32> cumton::blockchain::Block::GetBlockHash() const
+{
+    std::array<uint8_t, 32> hash;
+    SHA256_CTX ctx;
+
+    SHA256_Init(&ctx);
+    SHA256_Update(&ctx, (void *)&version, sizeof(version));
+    SHA256_Update(&ctx, (void *)&timestap, sizeof(timestap));
+    SHA256_Update(&ctx, (void *)&bits, sizeof(bits));
+    SHA256_Update(&ctx, (void *)&nonce, sizeof(nonce));
+    SHA256_Update(&ctx, (void *)&block_number, sizeof(block_number));
+    SHA256_Update(&ctx, (void *)prev_block.data(), sizeof(uint8_t) * prev_block.size());
+    SHA256_Update(&ctx, (void *)merkle_root.data(), sizeof(uint8_t) * merkle_root.size());
+
+    for (auto &i : transactions)
+    {
+        auto hash = i.GetTransactionHash();
+        SHA256_Update(&ctx, hash.c_str(), sizeof(char) * hash.size());
+    }
+
+    SHA256_Final(hash.data(), &ctx);
+
+    return hash;
 }
 
 void cumton::blockchain::Block::SaveBlockToFile(std::filesystem::path path)

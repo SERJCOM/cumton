@@ -2,3 +2,4 @@
 build
 assets/cumton-python
 libraries/FastBinaryEncoding
+libraries/yaml-cpp

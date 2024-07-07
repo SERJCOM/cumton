@@ -3,6 +3,7 @@ project(crypto)
 
 find_package(OpenSSL REQUIRED)
 find_package(yaml-cpp REQUIRED)
+find_package(Catch2 3 REQUIRED)
 
 set(UTILITIES_FILES 
 ${CMAKE_SOURCE_DIR}/Utilities/CryptoUtilities.cpp
@@ -18,12 +19,35 @@ ${CMAKE_SOURCE_DIR}/Blockchain/Blockchain.cpp
 ${CMAKE_SOURCE_DIR}/Blockchain/Transaction.cpp
 )
 
-add_executable(test CumTon/test.cpp ${BLOCKCHAIN_FILES} ${UTILITIES_FILES})
+# set(CMAKE_CXX_CPPCHECK "cppcheck")
 
-target_link_libraries(test PUBLIC OpenSSL::SSL uuid yaml-cpp::yaml-cpp )
+add_library(cumton ${BLOCKCHAIN_FILES} ${UTILITIES_FILES})
 
-target_include_directories(test PRIVATE 
+target_link_libraries(cumton PUBLIC OpenSSL::SSL uuid yaml-cpp::yaml-cpp )
+
+target_include_directories(cumton PRIVATE 
 ${CMAKE_SOURCE_DIR}
 ${CMAKE_CURRENT_BINARY_DIR}
-
 )
+
+
+add_executable(cumtonmain CumTon/test.cpp )
+
+target_link_libraries(cumtonmain PUBLIC OpenSSL::SSL uuid yaml-cpp::yaml-cpp cumton)
+
+target_include_directories(cumtonmain PRIVATE 
+${CMAKE_SOURCE_DIR}
+${CMAKE_CURRENT_BINARY_DIR}
+)
+
+
+
+add_executable(tests tests/test1.cpp)
+
+target_link_libraries(tests PRIVATE OpenSSL::SSL uuid Catch2::Catch2WithMain cumton)
+
+target_include_directories(tests PRIVATE 
+${CMAKE_SOURCE_DIR}
+)
+
+# add_custom_target(check ALL COMMAND tests)

@@ -36,12 +36,13 @@ namespace cumton::blockchain
               uint64_t block_number) : version(version), prev_block(std::move(prev_block)), timestap(timestap), bits(bits),
                                        nonce(nonce), block_number(block_number)
         {
-
-            auto bytes = GetBlockBytes();
-            block_hash = utilities::crypto::sha256(bytes);
+            block_hash = GetBlockHash();
         }
 
-        void CalculateBlockHash();
+        void CalculateBlockHash()
+        {
+            block_hash = GetBlockHash();
+        }
 
         void AddTransaction(const transaction::Transaction &transaction);
 
@@ -50,6 +51,8 @@ namespace cumton::blockchain
         void LoadBlockFromFile(std::filesystem::path path);
 
         std::vector<uint8_t> GetBlockBytes();
+
+        std::array<uint8_t, 32> GetBlockHash() const;
 
         friend std::ostream &operator<<(std::ostream &stream, Block &block)
         {
@@ -73,6 +76,21 @@ namespace cumton::blockchain
             stream << "}\n}";
 
             return stream;
+        }
+
+        Block &operator=(const Block &block)
+        {
+            version = block.version;
+            prev_block = block.prev_block;
+            merkle_root = block.merkle_root;
+            block_hash = block.block_hash;
+            timestap = block.timestap;
+            bits = block.bits;
+            nonce = block.nonce;
+            transactions = block.transactions;
+            block_number = block.block_number;
+
+            return *this;
         }
     };
 

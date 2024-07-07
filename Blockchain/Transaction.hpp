@@ -34,6 +34,8 @@ namespace cumton::transaction
         std::vector<InputTransaction> input;
         std::vector<OutputTransaction> output;
 
+        std::string GetTransactionHash() const;
+
         friend std::ostream &operator<<(std::ostream &stream, Transaction &tx)
         {
             stream << "version: " << tx.version << "\n";
