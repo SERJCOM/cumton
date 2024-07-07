@@ -17,8 +17,9 @@ namespace cumton::blockchain
     struct Block
     {
         int32_t version;
-        std::array<unsigned char, 32> prev_block;
-        std::array<unsigned char, 32> merkle_root;
+        std::array<uint8_t, 32> prev_block;
+        std::array<uint8_t, 32> merkle_root;
+        std::array<uint8_t, 32> block_hash;
         uint32_t timestap;
         uint32_t bits;
         uint32_t nonce;
@@ -33,13 +34,22 @@ namespace cumton::blockchain
               uint32_t bits,
               uint32_t nonce,
               uint64_t block_number) : version(version), prev_block(std::move(prev_block)), timestap(timestap), bits(bits),
-                                       nonce(nonce), block_number(block_number) {}
+                                       nonce(nonce), block_number(block_number)
+        {
+
+            auto bytes = GetBlockBytes();
+            block_hash = utilities::crypto::sha256(bytes);
+        }
+
+        void CalculateBlockHash();
 
         void AddTransaction(const transaction::Transaction &transaction);
 
         void SaveBlockToFile(std::filesystem::path path);
 
         void LoadBlockFromFile(std::filesystem::path path);
+
+        std::vector<uint8_t> GetBlockBytes();
 
         friend std::ostream &operator<<(std::ostream &stream, Block &block)
         {
@@ -52,16 +62,20 @@ namespace cumton::blockchain
             stream << "bits: " << block.bits << "\n";
             stream << "nonce: " << block.nonce << "\n";
             stream << "txn_count: " << block.transactions.size() << "\n";
+            stream << "block hash: " << block.block_hash << "\n";
 
+            stream << "transactions: {" << "\n";
             for (auto &i : block.transactions)
             {
                 stream << i;
             }
 
-            stream << "}";
+            stream << "}\n}";
 
             return stream;
         }
     };
+
+    // std::array<uint8_t, 32> GetBlockHash()
 
 }

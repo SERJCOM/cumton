@@ -2,6 +2,12 @@
 #include "Utilities/CodeGeneration/proto_models.h"
 #include <fstream>
 
+void cumton::blockchain::Block::CalculateBlockHash()
+{
+    auto bytes = GetBlockBytes();
+    block_hash = utilities::crypto::sha256(bytes);
+}
+
 void cumton::blockchain::Block::AddTransaction(const transaction::Transaction &transaction)
 {
     transactions.push_back(transaction);
@@ -34,6 +40,29 @@ void cumton::blockchain::Block::LoadBlockFromFile(std::filesystem::path path)
     file1.close();
 }
 
+std::vector<uint8_t> cumton::blockchain::Block::GetBlockBytes()
+{
+    proto::Block block;
+    block.bits = bits;
+    block.block_number = block_number;
+    block.merkle_root = merkle_root;
+    block.nonce = nonce;
+    block.prev_block = prev_block;
+    block.version = version;
+
+    FBE::proto::BlockModel writer;
+    writer.serialize(block);
+
+    std::vector<uint8_t> res;
+
+    for (int i = 0; i < writer.buffer().size(); i++)
+    {
+        res.push_back(writer.buffer().data()[i]);
+    }
+
+    return res;
+}
+
 void cumton::blockchain::Block::SaveBlockToFile(std::filesystem::path path)
 {
     proto::Block block;
@@ -48,9 +77,10 @@ void cumton::blockchain::Block::SaveBlockToFile(std::filesystem::path path)
     writer.serialize(block);
 
     std::ofstream file(path, std::ios::binary);
-    if(file.is_open())
+    if (file.is_open())
         file.write((char *)writer.buffer().data(), writer.buffer().size());
-    else{
+    else
+    {
         std::cout << "ERROR WITH FILE" << std::endl;
         assert(false);
     }

@@ -18,7 +18,7 @@ namespace cumton::blockchain
         BlockChain();
         
 
-
+        bool AddBlock(const Block& block);
 
     private:
 

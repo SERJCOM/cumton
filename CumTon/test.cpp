@@ -8,7 +8,7 @@ using namespace std;
 
 int main()
 {
-    cumton::blockchain::BlockChain chain();
+    cumton::blockchain::BlockChain chain;
 
     cumton::blockchain::Block block;
     block.bits = 5;
@@ -18,6 +18,7 @@ int main()
     block.prev_block = cumton::utilities::crypto::sha256("Terminal Root");
     block.merkle_root = cumton::utilities::crypto::sha256("Terminal Root1");
     
+    block.CalculateBlockHash();
 
     cout << block << endl;
 

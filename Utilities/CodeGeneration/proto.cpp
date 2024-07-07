@@ -170,4 +170,90 @@ std::ostream& operator<<(std::ostream& stream, const Block& value)
     return stream;
 }
 
+BlockHashSha256::BlockHashSha256()
+    : hash()
+{}
+
+BlockHashSha256::BlockHashSha256(const std::array<uint8_t, 32>& arg_hash)
+    : hash(arg_hash)
+{}
+
+bool BlockHashSha256::operator==(const BlockHashSha256& other) const noexcept
+{
+    return (
+        true
+        );
+}
+
+bool BlockHashSha256::operator<(const BlockHashSha256& other) const noexcept
+{
+    return false;
+}
+
+void BlockHashSha256::swap(BlockHashSha256& other) noexcept
+{
+    using std::swap;
+    swap(hash, other.hash);
+}
+
+std::ostream& operator<<(std::ostream& stream, const BlockHashSha256& value)
+{
+    stream << "BlockHashSha256(";
+    {
+        bool first = true;
+        stream << "hash=[32][";
+        for (size_t i = 0; i < 32; ++i)
+        {
+            stream << std::string(first ? "" : ",") << (int)value.hash[i];
+            first = false;
+        }
+        stream << "]";
+    }
+    stream << ")";
+    return stream;
+}
+
+BlockIndexDb::BlockIndexDb()
+    : index_block()
+{}
+
+BlockIndexDb::BlockIndexDb(const std::vector<::proto::BlockHashSha256>& arg_index_block)
+    : index_block(arg_index_block)
+{}
+
+bool BlockIndexDb::operator==(const BlockIndexDb& other) const noexcept
+{
+    return (
+        true
+        );
+}
+
+bool BlockIndexDb::operator<(const BlockIndexDb& other) const noexcept
+{
+    return false;
+}
+
+void BlockIndexDb::swap(BlockIndexDb& other) noexcept
+{
+    using std::swap;
+    swap(index_block, other.index_block);
+}
+
+std::ostream& operator<<(std::ostream& stream, const BlockIndexDb& value)
+{
+    stream << "BlockIndexDb(";
+    {
+        bool first = true;
+        stream << "index_block=[" << value.index_block.size() << "][";
+        for (const auto& it : value.index_block)
+        {
+            stream << std::string(first ? "" : ",") << it;
+            first = false;
+        }
+        stream << "]";
+    }
+    stream << ")";
+    return stream;
+}
+
 } // namespace proto

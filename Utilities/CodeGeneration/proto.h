@@ -188,4 +188,106 @@ struct std::hash<proto::Block>
 
 namespace proto {
 
+struct BlockHashSha256
+{
+    std::array<uint8_t, 32> hash;
+
+    size_t fbe_type() const noexcept { return 1; }
+
+    BlockHashSha256();
+    explicit BlockHashSha256(const std::array<uint8_t, 32>& arg_hash);
+    BlockHashSha256(const BlockHashSha256& other) = default;
+    BlockHashSha256(BlockHashSha256&& other) = default;
+    ~BlockHashSha256() = default;
+
+    BlockHashSha256& operator=(const BlockHashSha256& other) = default;
+    BlockHashSha256& operator=(BlockHashSha256&& other) = default;
+
+    bool operator==(const BlockHashSha256& other) const noexcept;
+    bool operator!=(const BlockHashSha256& other) const noexcept { return !operator==(other); }
+    bool operator<(const BlockHashSha256& other) const noexcept;
+    bool operator<=(const BlockHashSha256& other) const noexcept { return operator<(other) || operator==(other); }
+    bool operator>(const BlockHashSha256& other) const noexcept { return !operator<=(other); }
+    bool operator>=(const BlockHashSha256& other) const noexcept { return !operator<(other); }
+
+    std::string string() const { std::stringstream ss; ss << *this; return ss.str(); }
+
+    friend std::ostream& operator<<(std::ostream& stream, const BlockHashSha256& value);
+
+    void swap(BlockHashSha256& other) noexcept;
+    friend void swap(BlockHashSha256& value1, BlockHashSha256& value2) noexcept { value1.swap(value2); }
+};
+
+} // namespace proto
+
+#if defined(FMT_VERSION) && (FMT_VERSION >= 90000)
+template <> struct fmt::formatter<proto::BlockHashSha256> : ostream_formatter {};
+#endif
+
+template<>
+struct std::hash<proto::BlockHashSha256>
+{
+    typedef proto::BlockHashSha256 argument_type;
+    typedef size_t result_type;
+
+    result_type operator() (const argument_type& value) const
+    {
+        result_type result = 17;
+        return result;
+    }
+};
+
+namespace proto {
+
+struct BlockIndexDb
+{
+    std::vector<::proto::BlockHashSha256> index_block;
+
+    size_t fbe_type() const noexcept { return 2; }
+
+    BlockIndexDb();
+    explicit BlockIndexDb(const std::vector<::proto::BlockHashSha256>& arg_index_block);
+    BlockIndexDb(const BlockIndexDb& other) = default;
+    BlockIndexDb(BlockIndexDb&& other) = default;
+    ~BlockIndexDb() = default;
+
+    BlockIndexDb& operator=(const BlockIndexDb& other) = default;
+    BlockIndexDb& operator=(BlockIndexDb&& other) = default;
+
+    bool operator==(const BlockIndexDb& other) const noexcept;
+    bool operator!=(const BlockIndexDb& other) const noexcept { return !operator==(other); }
+    bool operator<(const BlockIndexDb& other) const noexcept;
+    bool operator<=(const BlockIndexDb& other) const noexcept { return operator<(other) || operator==(other); }
+    bool operator>(const BlockIndexDb& other) const noexcept { return !operator<=(other); }
+    bool operator>=(const BlockIndexDb& other) const noexcept { return !operator<(other); }
+
+    std::string string() const { std::stringstream ss; ss << *this; return ss.str(); }
+
+    friend std::ostream& operator<<(std::ostream& stream, const BlockIndexDb& value);
+
+    void swap(BlockIndexDb& other) noexcept;
+    friend void swap(BlockIndexDb& value1, BlockIndexDb& value2) noexcept { value1.swap(value2); }
+};
+
+} // namespace proto
+
+#if defined(FMT_VERSION) && (FMT_VERSION >= 90000)
+template <> struct fmt::formatter<proto::BlockIndexDb> : ostream_formatter {};
+#endif
+
+template<>
+struct std::hash<proto::BlockIndexDb>
+{
+    typedef proto::BlockIndexDb argument_type;
+    typedef size_t result_type;
+
+    result_type operator() (const argument_type& value) const
+    {
+        result_type result = 17;
+        return result;
+    }
+};
+
+namespace proto {
+
 } // namespace proto

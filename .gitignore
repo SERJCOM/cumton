@@ -1,4 +1,4 @@
 .vscode
 build
 assets/cumton-python
-libraries/
+libraries/FastBinaryEncoding

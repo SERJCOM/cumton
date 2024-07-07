@@ -752,4 +752,415 @@ size_t BlockModel::deserialize(::proto::Block& value) const noexcept
 
 } // namespace proto
 
+FieldModel<::proto::BlockHashSha256>::FieldModel(FBEBuffer& buffer, size_t offset) noexcept : _buffer(buffer), _offset(offset)
+    , hash(buffer, 4 + 4)
+{}
+
+size_t FieldModel<::proto::BlockHashSha256>::fbe_body() const noexcept
+{
+    size_t fbe_result = 4 + 4
+        + hash.fbe_size()
+        ;
+    return fbe_result;
+}
+
+size_t FieldModel<::proto::BlockHashSha256>::fbe_extra() const noexcept
+{
+    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
+        return 0;
+
+    uint32_t fbe_struct_offset = *((const uint32_t*)(_buffer.data() + _buffer.offset() + fbe_offset()));
+    if ((fbe_struct_offset == 0) || ((_buffer.offset() + fbe_struct_offset + 4) > _buffer.size()))
+        return 0;
+
+    _buffer.shift(fbe_struct_offset);
+
+    size_t fbe_result = fbe_body()
+        + hash.fbe_extra()
+        ;
+
+    _buffer.unshift(fbe_struct_offset);
+
+    return fbe_result;
+}
+
+bool FieldModel<::proto::BlockHashSha256>::verify(bool fbe_verify_type) const noexcept
+{
+    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
+        return true;
+
+    uint32_t fbe_struct_offset = *((const uint32_t*)(_buffer.data() + _buffer.offset() + fbe_offset()));
+    if ((fbe_struct_offset == 0) || ((_buffer.offset() + fbe_struct_offset + 4 + 4) > _buffer.size()))
+        return false;
+
+    uint32_t fbe_struct_size = *((const uint32_t*)(_buffer.data() + _buffer.offset() + fbe_struct_offset));
+    if (fbe_struct_size < (4 + 4))
+        return false;
+
+    uint32_t fbe_struct_type = *((const uint32_t*)(_buffer.data() + _buffer.offset() + fbe_struct_offset + 4));
+    if (fbe_verify_type && (fbe_struct_type != fbe_type()))
+        return false;
+
+    _buffer.shift(fbe_struct_offset);
+    bool fbe_result = verify_fields(fbe_struct_size);
+    _buffer.unshift(fbe_struct_offset);
+    return fbe_result;
+}
+
+bool FieldModel<::proto::BlockHashSha256>::verify_fields(size_t fbe_struct_size) const noexcept
+{
+    size_t fbe_current_size = 4 + 4;
+
+    if ((fbe_current_size + hash.fbe_size()) > fbe_struct_size)
+        return true;
+    if (!hash.verify())
+        return false;
+    fbe_current_size += hash.fbe_size();
+
+    return true;
+}
+
+size_t FieldModel<::proto::BlockHashSha256>::get_begin() const noexcept
+{
+    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
+        return 0;
+
+    uint32_t fbe_struct_offset = *((const uint32_t*)(_buffer.data() + _buffer.offset() + fbe_offset()));
+    assert(((fbe_struct_offset > 0) && ((_buffer.offset() + fbe_struct_offset + 4 + 4) <= _buffer.size())) && "Model is broken!");
+    if ((fbe_struct_offset == 0) || ((_buffer.offset() + fbe_struct_offset + 4 + 4) > _buffer.size()))
+        return 0;
+
+    uint32_t fbe_struct_size = *((const uint32_t*)(_buffer.data() + _buffer.offset() + fbe_struct_offset));
+    assert((fbe_struct_size >= (4 + 4)) && "Model is broken!");
+    if (fbe_struct_size < (4 + 4))
+        return 0;
+
+    _buffer.shift(fbe_struct_offset);
+    return fbe_struct_offset;
+}
+
+void FieldModel<::proto::BlockHashSha256>::get_end(size_t fbe_begin) const noexcept
+{
+    _buffer.unshift(fbe_begin);
+}
+
+void FieldModel<::proto::BlockHashSha256>::get(::proto::BlockHashSha256& fbe_value) const noexcept
+{
+    size_t fbe_begin = get_begin();
+    if (fbe_begin == 0)
+        return;
+
+    uint32_t fbe_struct_size = *((const uint32_t*)(_buffer.data() + _buffer.offset()));
+    get_fields(fbe_value, fbe_struct_size);
+    get_end(fbe_begin);
+}
+
+void FieldModel<::proto::BlockHashSha256>::get_fields(::proto::BlockHashSha256& fbe_value, size_t fbe_struct_size) const noexcept
+{
+    size_t fbe_current_size = 4 + 4;
+
+    if ((fbe_current_size + hash.fbe_size()) <= fbe_struct_size)
+        hash.get(fbe_value.hash);
+    else
+    fbe_current_size += hash.fbe_size();
+}
+
+size_t FieldModel<::proto::BlockHashSha256>::set_begin()
+{
+    assert(((_buffer.offset() + fbe_offset() + fbe_size()) <= _buffer.size()) && "Model is broken!");
+    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
+        return 0;
+
+    uint32_t fbe_struct_size = (uint32_t)fbe_body();
+    uint32_t fbe_struct_offset = (uint32_t)(_buffer.allocate(fbe_struct_size) - _buffer.offset());
+    assert(((fbe_struct_offset > 0) && ((_buffer.offset() + fbe_struct_offset + fbe_struct_size) <= _buffer.size())) && "Model is broken!");
+    if ((fbe_struct_offset == 0) || ((_buffer.offset() + fbe_struct_offset + fbe_struct_size) > _buffer.size()))
+        return 0;
+
+    *((uint32_t*)(_buffer.data() + _buffer.offset() + fbe_offset())) = fbe_struct_offset;
+    *((uint32_t*)(_buffer.data() + _buffer.offset() + fbe_struct_offset)) = fbe_struct_size;
+    *((uint32_t*)(_buffer.data() + _buffer.offset() + fbe_struct_offset + 4)) = (uint32_t)fbe_type();
+
+    _buffer.shift(fbe_struct_offset);
+    return fbe_struct_offset;
+}
+
+void FieldModel<::proto::BlockHashSha256>::set_end(size_t fbe_begin)
+{
+    _buffer.unshift(fbe_begin);
+}
+
+void FieldModel<::proto::BlockHashSha256>::set(const ::proto::BlockHashSha256& fbe_value) noexcept
+{
+    size_t fbe_begin = set_begin();
+    if (fbe_begin == 0)
+        return;
+
+    set_fields(fbe_value);
+    set_end(fbe_begin);
+}
+
+void FieldModel<::proto::BlockHashSha256>::set_fields(const ::proto::BlockHashSha256& fbe_value) noexcept
+{
+    hash.set(fbe_value.hash);
+}
+
+namespace proto {
+
+bool BlockHashSha256Model::verify()
+{
+    if ((this->buffer().offset() + model.fbe_offset() - 4) > this->buffer().size())
+        return false;
+
+    uint32_t fbe_full_size = *((const uint32_t*)(this->buffer().data() + this->buffer().offset() + model.fbe_offset() - 4));
+    if (fbe_full_size < model.fbe_size())
+        return false;
+
+    return model.verify();
+}
+
+size_t BlockHashSha256Model::create_begin()
+{
+    size_t fbe_begin = this->buffer().allocate(4 + model.fbe_size());
+    return fbe_begin;
+}
+
+size_t BlockHashSha256Model::create_end(size_t fbe_begin)
+{
+    size_t fbe_end = this->buffer().size();
+    uint32_t fbe_full_size = (uint32_t)(fbe_end - fbe_begin);
+    *((uint32_t*)(this->buffer().data() + this->buffer().offset() + model.fbe_offset() - 4)) = fbe_full_size;
+    return fbe_full_size;
+}
+
+size_t BlockHashSha256Model::serialize(const ::proto::BlockHashSha256& value)
+{
+    size_t fbe_begin = create_begin();
+    model.set(value);
+    size_t fbe_full_size = create_end(fbe_begin);
+    return fbe_full_size;
+}
+
+size_t BlockHashSha256Model::deserialize(::proto::BlockHashSha256& value) const noexcept
+{
+    if ((this->buffer().offset() + model.fbe_offset() - 4) > this->buffer().size())
+        return 0;
+
+    uint32_t fbe_full_size = *((const uint32_t*)(this->buffer().data() + this->buffer().offset() + model.fbe_offset() - 4));
+    assert((fbe_full_size >= model.fbe_size()) && "Model is broken!");
+    if (fbe_full_size < model.fbe_size())
+        return 0;
+
+    model.get(value);
+    return fbe_full_size;
+}
+
+} // namespace proto
+
+FieldModel<::proto::BlockIndexDb>::FieldModel(FBEBuffer& buffer, size_t offset) noexcept : _buffer(buffer), _offset(offset)
+    , index_block(buffer, 4 + 4)
+{}
+
+size_t FieldModel<::proto::BlockIndexDb>::fbe_body() const noexcept
+{
+    size_t fbe_result = 4 + 4
+        + index_block.fbe_size()
+        ;
+    return fbe_result;
+}
+
+size_t FieldModel<::proto::BlockIndexDb>::fbe_extra() const noexcept
+{
+    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
+        return 0;
+
+    uint32_t fbe_struct_offset = *((const uint32_t*)(_buffer.data() + _buffer.offset() + fbe_offset()));
+    if ((fbe_struct_offset == 0) || ((_buffer.offset() + fbe_struct_offset + 4) > _buffer.size()))
+        return 0;
+
+    _buffer.shift(fbe_struct_offset);
+
+    size_t fbe_result = fbe_body()
+        + index_block.fbe_extra()
+        ;
+
+    _buffer.unshift(fbe_struct_offset);
+
+    return fbe_result;
+}
+
+bool FieldModel<::proto::BlockIndexDb>::verify(bool fbe_verify_type) const noexcept
+{
+    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
+        return true;
+
+    uint32_t fbe_struct_offset = *((const uint32_t*)(_buffer.data() + _buffer.offset() + fbe_offset()));
+    if ((fbe_struct_offset == 0) || ((_buffer.offset() + fbe_struct_offset + 4 + 4) > _buffer.size()))
+        return false;
+
+    uint32_t fbe_struct_size = *((const uint32_t*)(_buffer.data() + _buffer.offset() + fbe_struct_offset));
+    if (fbe_struct_size < (4 + 4))
+        return false;
+
+    uint32_t fbe_struct_type = *((const uint32_t*)(_buffer.data() + _buffer.offset() + fbe_struct_offset + 4));
+    if (fbe_verify_type && (fbe_struct_type != fbe_type()))
+        return false;
+
+    _buffer.shift(fbe_struct_offset);
+    bool fbe_result = verify_fields(fbe_struct_size);
+    _buffer.unshift(fbe_struct_offset);
+    return fbe_result;
+}
+
+bool FieldModel<::proto::BlockIndexDb>::verify_fields(size_t fbe_struct_size) const noexcept
+{
+    size_t fbe_current_size = 4 + 4;
+
+    if ((fbe_current_size + index_block.fbe_size()) > fbe_struct_size)
+        return true;
+    if (!index_block.verify())
+        return false;
+    fbe_current_size += index_block.fbe_size();
+
+    return true;
+}
+
+size_t FieldModel<::proto::BlockIndexDb>::get_begin() const noexcept
+{
+    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
+        return 0;
+
+    uint32_t fbe_struct_offset = *((const uint32_t*)(_buffer.data() + _buffer.offset() + fbe_offset()));
+    assert(((fbe_struct_offset > 0) && ((_buffer.offset() + fbe_struct_offset + 4 + 4) <= _buffer.size())) && "Model is broken!");
+    if ((fbe_struct_offset == 0) || ((_buffer.offset() + fbe_struct_offset + 4 + 4) > _buffer.size()))
+        return 0;
+
+    uint32_t fbe_struct_size = *((const uint32_t*)(_buffer.data() + _buffer.offset() + fbe_struct_offset));
+    assert((fbe_struct_size >= (4 + 4)) && "Model is broken!");
+    if (fbe_struct_size < (4 + 4))
+        return 0;
+
+    _buffer.shift(fbe_struct_offset);
+    return fbe_struct_offset;
+}
+
+void FieldModel<::proto::BlockIndexDb>::get_end(size_t fbe_begin) const noexcept
+{
+    _buffer.unshift(fbe_begin);
+}
+
+void FieldModel<::proto::BlockIndexDb>::get(::proto::BlockIndexDb& fbe_value) const noexcept
+{
+    size_t fbe_begin = get_begin();
+    if (fbe_begin == 0)
+        return;
+
+    uint32_t fbe_struct_size = *((const uint32_t*)(_buffer.data() + _buffer.offset()));
+    get_fields(fbe_value, fbe_struct_size);
+    get_end(fbe_begin);
+}
+
+void FieldModel<::proto::BlockIndexDb>::get_fields(::proto::BlockIndexDb& fbe_value, size_t fbe_struct_size) const noexcept
+{
+    size_t fbe_current_size = 4 + 4;
+
+    if ((fbe_current_size + index_block.fbe_size()) <= fbe_struct_size)
+        index_block.get(fbe_value.index_block);
+    else
+        fbe_value.index_block.clear();
+    fbe_current_size += index_block.fbe_size();
+}
+
+size_t FieldModel<::proto::BlockIndexDb>::set_begin()
+{
+    assert(((_buffer.offset() + fbe_offset() + fbe_size()) <= _buffer.size()) && "Model is broken!");
+    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
+        return 0;
+
+    uint32_t fbe_struct_size = (uint32_t)fbe_body();
+    uint32_t fbe_struct_offset = (uint32_t)(_buffer.allocate(fbe_struct_size) - _buffer.offset());
+    assert(((fbe_struct_offset > 0) && ((_buffer.offset() + fbe_struct_offset + fbe_struct_size) <= _buffer.size())) && "Model is broken!");
+    if ((fbe_struct_offset == 0) || ((_buffer.offset() + fbe_struct_offset + fbe_struct_size) > _buffer.size()))
+        return 0;
+
+    *((uint32_t*)(_buffer.data() + _buffer.offset() + fbe_offset())) = fbe_struct_offset;
+    *((uint32_t*)(_buffer.data() + _buffer.offset() + fbe_struct_offset)) = fbe_struct_size;
+    *((uint32_t*)(_buffer.data() + _buffer.offset() + fbe_struct_offset + 4)) = (uint32_t)fbe_type();
+
+    _buffer.shift(fbe_struct_offset);
+    return fbe_struct_offset;
+}
+
+void FieldModel<::proto::BlockIndexDb>::set_end(size_t fbe_begin)
+{
+    _buffer.unshift(fbe_begin);
+}
+
+void FieldModel<::proto::BlockIndexDb>::set(const ::proto::BlockIndexDb& fbe_value) noexcept
+{
+    size_t fbe_begin = set_begin();
+    if (fbe_begin == 0)
+        return;
+
+    set_fields(fbe_value);
+    set_end(fbe_begin);
+}
+
+void FieldModel<::proto::BlockIndexDb>::set_fields(const ::proto::BlockIndexDb& fbe_value) noexcept
+{
+    index_block.set(fbe_value.index_block);
+}
+
+namespace proto {
+
+bool BlockIndexDbModel::verify()
+{
+    if ((this->buffer().offset() + model.fbe_offset() - 4) > this->buffer().size())
+        return false;
+
+    uint32_t fbe_full_size = *((const uint32_t*)(this->buffer().data() + this->buffer().offset() + model.fbe_offset() - 4));
+    if (fbe_full_size < model.fbe_size())
+        return false;
+
+    return model.verify();
+}
+
+size_t BlockIndexDbModel::create_begin()
+{
+    size_t fbe_begin = this->buffer().allocate(4 + model.fbe_size());
+    return fbe_begin;
+}
+
+size_t BlockIndexDbModel::create_end(size_t fbe_begin)
+{
+    size_t fbe_end = this->buffer().size();
+    uint32_t fbe_full_size = (uint32_t)(fbe_end - fbe_begin);
+    *((uint32_t*)(this->buffer().data() + this->buffer().offset() + model.fbe_offset() - 4)) = fbe_full_size;
+    return fbe_full_size;
+}
+
+size_t BlockIndexDbModel::serialize(const ::proto::BlockIndexDb& value)
+{
+    size_t fbe_begin = create_begin();
+    model.set(value);
+    size_t fbe_full_size = create_end(fbe_begin);
+    return fbe_full_size;
+}
+
+size_t BlockIndexDbModel::deserialize(::proto::BlockIndexDb& value) const noexcept
+{
+    if ((this->buffer().offset() + model.fbe_offset() - 4) > this->buffer().size())
+        return 0;
+
+    uint32_t fbe_full_size = *((const uint32_t*)(this->buffer().data() + this->buffer().offset() + model.fbe_offset() - 4));
+    assert((fbe_full_size >= model.fbe_size()) && "Model is broken!");
+    if (fbe_full_size < model.fbe_size())
+        return 0;
+
+    model.get(value);
+    return fbe_full_size;
+}
+
+} // namespace proto
+
 } // namespace FBE

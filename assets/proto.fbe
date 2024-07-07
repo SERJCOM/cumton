@@ -24,3 +24,11 @@ struct Block(3){
     // Transaction?[] transactions;
     uint64 block_number; 
 }
+
+struct BlockHashSha256{
+    byte[32] hash;
+}
+
+struct BlockIndexDb{
+    BlockHashSha256[] index_block;
+}

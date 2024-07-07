@@ -1,3 +1,6 @@
 [submodule "libraries/FastBinaryEncoding"]
 	path = libraries/FastBinaryEncoding
 	url = https://github.com/chronoxor/FastBinaryEncoding.git
+[submodule "libraries/yaml-cpp"]
+	path = libraries/yaml-cpp
+	url = https://github.com/jbeder/yaml-cpp.git
