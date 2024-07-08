@@ -16,7 +16,7 @@ namespace cumton::blockchain
 
     struct Block
     {
-        int32_t version;
+        int32_t version = 0;
         std::array<uint8_t, 32> prev_block;
         std::array<uint8_t, 32> merkle_root;
         std::array<uint8_t, 32> block_hash;
@@ -91,6 +91,26 @@ namespace cumton::blockchain
             block_number = block.block_number;
 
             return *this;
+        }
+
+        bool operator==(const Block &block)
+        {
+            // bool flag = false;
+            // flag = (version == block.version && prev_block == block.prev_block &&
+            // merkle_root == block.merkle_root &&
+            // block_hash == block.block_hash &&
+            // timestap == block.timestap &&
+            // bits == block.bits &&
+            // nonce == block.nonce );
+
+            // for(auto& i : transactions){
+            //     flag = flag && 
+            // }
+
+            // transactions == block.transactions &&
+            // block_number == block.block_number );
+
+            return false;
         }
     };
 

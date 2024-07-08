@@ -12,6 +12,8 @@
 namespace cumton::utilities::crypto
 {
 
+    
+
     std::array<uint8_t, SHA256_LENGTH> sha256(const std::string &str);
 
     std::array<uint8_t, SHA256_LENGTH> sha256(const std::vector<uint8_t> &data);

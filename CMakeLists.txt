@@ -16,10 +16,16 @@ ${CMAKE_SOURCE_DIR}/Utilities/CodeGeneration/proto.cpp
 set(BLOCKCHAIN_FILES 
 ${CMAKE_SOURCE_DIR}/Blockchain/Block.cpp
 ${CMAKE_SOURCE_DIR}/Blockchain/Blockchain.cpp
+${CMAKE_SOURCE_DIR}/Blockchain/BlockchainDB.cpp
 ${CMAKE_SOURCE_DIR}/Blockchain/Transaction.cpp
 )
 
-# set(CMAKE_CXX_CPPCHECK "cppcheck")
+set(CRYPTO_FILES 
+${CMAKE_SOURCE_DIR}/Crypto/Hash.cpp
+
+)
+
+set(CMAKE_CXX_CPPCHECK "cppcheck")
 
 add_library(cumton ${BLOCKCHAIN_FILES} ${UTILITIES_FILES})
 

@@ -1,24 +1,37 @@
 #include <catch2/catch_test_macros.hpp>
 
 #include "Blockchain/Block.hpp"
+#include "Blockchain/BlockchainDB.hpp"
 
-TEST_CASE("HASH OF THE BLOCK")
+
+TEST_CASE("BLOCKCHAIN DB TEST")
 {
-    cumton::blockchain::Block block;
-    block.bits = 5;
-    block.nonce = 5;
-    block.version = 1;
-    block.block_number = 0;
-    block.prev_block = cumton::utilities::crypto::sha256("Terminal Root");
-    block.merkle_root = cumton::utilities::crypto::sha256("Terminal Root1");
-    
-    block.CalculateBlockHash();
+    using namespace cumton::blockchain;
+    using namespace cumton;
 
-    // std::string hashstr = "f969e7ff018292197e85bc35528c7a851edbc53073a587c5a34aa950c8ddaf35";
-    // std::array<uint8_t, 32> hashar;
-    // for(int i = 0; i < hashstr.size(); i++){
-    //     hashar[i] = hashstr[i];
-    // }
+    auto db = CreateBlockChainDB();
 
-    REQUIRE(1 == 1);
+    Block block1;
+    block1.prev_block = utilities::crypto::sha256("Terminal Root");
+    block1.CalculateBlockHash();
+
+    Block block2;
+    block2.prev_block = block1.block_hash;
+    block2.CalculateBlockHash();
+
+    Block block3;
+    block3.prev_block = block2.block_hash;
+    block3.CalculateBlockHash();
+
+    db->AddFirstBlock(block1);
+    db->AddNewBlock(block2, block1.block_hash);
+    db->AddNewBlock(block3, block2.block_hash);
+
+
+    REQUIRE(db->GetSize() == 3);
+
+    REQUIRE(*db->GetPreviosBlock(block3.block_hash) == block2);
+
+    REQUIRE(*db->GetPreviosBlock(block2.block_hash) == block1);
+
 }
