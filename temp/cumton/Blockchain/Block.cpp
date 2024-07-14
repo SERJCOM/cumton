@@ -34,12 +34,6 @@ void cumton::blockchain::Block::LoadBlockFromFile(std::filesystem::path path)
     file1.close();
 }
 
-void cumton::blockchain::Block::LoadBlockFromString(std::string str)
-{
-    FBE::proto::BlockModel writer1;
-    writer1.attach(str.data(), str.size());
-}
-
 std::vector<uint8_t> cumton::blockchain::Block::GetBlockBytes()
 {
     proto::Block block;

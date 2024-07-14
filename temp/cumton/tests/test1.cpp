@@ -3,6 +3,7 @@
 #include "Blockchain/Block.hpp"
 #include "Blockchain/BlockchainDB.hpp"
 
+
 TEST_CASE("BLOCKCHAIN DB TEST")
 {
     using namespace cumton::blockchain;
@@ -11,7 +12,7 @@ TEST_CASE("BLOCKCHAIN DB TEST")
     auto db = CreateBlockChainDB();
 
     Block block1;
-    block1.prev_block = utilities::crypto::sha256("1");
+    block1.prev_block = utilities::crypto::sha256("Terminal Root");
     block1.CalculateBlockHash();
 
     Block block2;
@@ -22,14 +23,15 @@ TEST_CASE("BLOCKCHAIN DB TEST")
     block3.prev_block = block2.block_hash;
     block3.CalculateBlockHash();
 
-    db->AddNewBlock(block1);
-    db->AddNewBlock(block2);
-    db->AddNewBlock(block3);
+    db->AddFirstBlock(block1);
+    db->AddNewBlock(block2, block1.block_hash);
+    db->AddNewBlock(block3, block2.block_hash);
+
 
     REQUIRE(db->GetSize() == 3);
 
-    REQUIRE(db->GetBlock(block2.block_hash) == block2);
+    REQUIRE(*db->GetPreviosBlock(block3.block_hash) == block2);
 
-    REQUIRE(db->GetBlock(block1.block_hash) == block1);
+    REQUIRE(*db->GetPreviosBlock(block2.block_hash) == block1);
+
 }
-

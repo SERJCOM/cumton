@@ -10,7 +10,6 @@
 #include <memory>
 
 #include "Block.hpp"
-#include "Crypto/Hash.hpp"
 
 namespace cumton::blockchain
 {
@@ -31,7 +30,7 @@ namespace cumton::blockchain
         }
 
     private:
-        std::map<crypto::SHA256, std::unique_ptr<Block>> blockchain_db;
+        std::map<std::array<uint8_t, 32>, std::unique_ptr<Block>> blockchain_db;
     };
 
 }

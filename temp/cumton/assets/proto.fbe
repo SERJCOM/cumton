@@ -1,0 +1,34 @@
+domain com.cumton
+
+package proto
+
+version 1.0 
+
+struct InputTransaction(1){
+    byte[32] hash;
+    int32 previos_output_index;
+}
+
+struct Transaction(2){
+    int32 version;
+    uint32 input_count;
+}
+
+struct Block(3){
+    uint32 version;
+    byte[32] prev_block;
+    byte[32] merkle_root;
+    uint32 timestap;
+    uint32 bits;
+    uint32 nonce;
+    // Transaction?[] transactions;
+    uint64 block_number; 
+}
+
+struct BlockHashSha256{
+    byte[32] hash;
+}
+
+struct BlockIndexDb{
+    BlockHashSha256[] index_block;
+}

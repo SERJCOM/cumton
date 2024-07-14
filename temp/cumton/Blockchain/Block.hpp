@@ -9,7 +9,6 @@
 #include <string>
 #include <filesystem>
 
-#include "Crypto/Hash.hpp"
 #include "Utilities/CryptoUtilities.h"
 
 namespace cumton::blockchain
@@ -18,9 +17,9 @@ namespace cumton::blockchain
     struct Block
     {
         int32_t version = 0;
-        crypto::SHA256 prev_block;
-        crypto::SHA256 merkle_root;
-        crypto::SHA256 block_hash;
+        std::array<uint8_t, 32> prev_block;
+        std::array<uint8_t, 32> merkle_root;
+        std::array<uint8_t, 32> block_hash;
         uint32_t timestap;
         uint32_t bits;
         uint32_t nonce;
@@ -29,8 +28,8 @@ namespace cumton::blockchain
 
         Block() = default;
 
-        Block(int32_t version, crypto::SHA256 prev_block,
-              crypto::SHA256 merkle_root,
+        Block(int32_t version, std::array<unsigned char, 32> prev_block,
+              std::array<unsigned char, 32> merkle_root,
               uint32_t timestap,
               uint32_t bits,
               uint32_t nonce,
@@ -51,11 +50,9 @@ namespace cumton::blockchain
 
         void LoadBlockFromFile(std::filesystem::path path);
 
-        void LoadBlockFromString(std::string str);
-
         std::vector<uint8_t> GetBlockBytes();
 
-        crypto::SHA256 GetBlockHash() const;
+        std::array<uint8_t, 32> GetBlockHash() const;
 
         friend std::ostream &operator<<(std::ostream &stream, Block &block)
         {
@@ -96,25 +93,27 @@ namespace cumton::blockchain
             return *this;
         }
 
-        bool operator==(const Block &block) const 
+        bool operator==(const Block &block)
         {
-            bool flag = false;
-            flag = (version == block.version && prev_block == block.prev_block &&
-            merkle_root == block.merkle_root &&
-            block_hash == block.block_hash &&
-            timestap == block.timestap &&
-            bits == block.bits &&
-            nonce == block.nonce );
+            // bool flag = false;
+            // flag = (version == block.version && prev_block == block.prev_block &&
+            // merkle_root == block.merkle_root &&
+            // block_hash == block.block_hash &&
+            // timestap == block.timestap &&
+            // bits == block.bits &&
+            // nonce == block.nonce );
 
-            // for(int i = 0; i < transactions.size(); i++){
-            //     flag = flag && transaction[i] == block[i]
+            // for(auto& i : transactions){
+            //     flag = flag && 
             // }
 
             // transactions == block.transactions &&
             // block_number == block.block_number );
 
-            return flag;
+            return false;
         }
     };
+
+    // std::array<uint8_t, 32> GetBlockHash()
 
 }

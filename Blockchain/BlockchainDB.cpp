@@ -3,45 +3,71 @@
 
 #include "Blockchain.hpp"
 #include "BlockchainDB.hpp"
-
+#include <list>
+#include <leveldb/db.h>
 
 using namespace cumton::blockchain;
+using namespace cumton;
 
-struct BlockLine
-{
-
-    Hash256 current_hash;
-    std::vector<Hash256> next_hashes;
-    Hash256 previos_hash;
-};
-
-class TempBlockChainDB : public cumton::blockchain::IBlockChainDB
+class BlockChainDB : public cumton::blockchain::IBlockChainDB
 {
 public:
+    BlockChainDB()
+    {
+        leveldb::Options options;
+        options.create_if_missing = true;
+        leveldb::Status status = leveldb::DB::Open(options, "/tmp/testdb", &db);
+        assert(status.ok());
 
-    TempBlockChainDB() = default;
+        leveldb::Iterator *it = db->NewIterator(leveldb::ReadOptions());
+        for (it->SeekToFirst(); it->Valid(); it->Next())
+        {
+            hash_block[crypto::StringToHash(it->key().ToString().data())] = Block{};
+            hash_block[crypto::StringToHash(it->key().ToString().data())].LoadBlockFromString(it->value().ToString());
+        }
+    }
 
-    bool AddNewBlock(const Block &new_block, const Hash256 &prev_block){}
+    bool AddNewBlock(const Block &new_block)
+    {
+        hash_block[new_block.block_hash] = new_block;
+    }
 
-    bool AddFirstBlock(const Block &new_block){}
-    
-    Block *GetPreviosBlock(const Hash256 &current_block) const{}
+    Block GetPreviosBlock(const cumton::crypto::SHA256 &current_block) const {}
 
-    std::vector<Block *> GetNextBlock(const Hash256 &current_block) const{}
+    bool EraceLastBlock(const cumton::crypto::SHA256 &block) {}
 
-    bool EraceLastBlock(const Hash256 &block){}
+    size_t GetSize()
+    {
+        return hash_block.size();
+    }
 
-    void RemoveTree(const Hash256 &block){}
+    Block GetBlock(const crypto::SHA256 hash) override
+    {
+        return hash_block.at(hash);
+    }
 
-    size_t GetSize(){}
+    Block GetLastBlock() override
+    {
+        return GetBlock(last_block);
+    }
+
+    void RemoveBlock() override
+    {
+        crypto::SHA256 temp = GetBlock(last_block).prev_block;
+        hash_block.erase(last_block);
+        last_block = temp;
+    }
 
 private:
-    std::map<Hash256, std::unique_ptr<Block>> blockchain_db;
+    leveldb::DB *db;
 
-    std::vector<BlockLine> blockchain_list;
+    std::map<cumton::crypto::SHA256, Block> hash_block;
+
+    crypto::SHA256 last_block;
 };
 
 std::unique_ptr<cumton::blockchain::IBlockChainDB> cumton::blockchain::CreateBlockChainDB()
 {
-    return std::make_unique<TempBlockChainDB>();
+    // сделать эту херь статичной
+    return std::make_unique<BlockChainDB>();
 }

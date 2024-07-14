@@ -1,16 +1,15 @@
 #pragma once
 
 #include <array>
+#include <string>
 
-using Hash256 = std::array<uint8_t, 32>;
+namespace cumton::crypto
+{
 
-// namespace cumton::crypto{
+    using SHA256 = std::array<uint8_t, 32>;
 
-// class Hash256{
-// public:
+    SHA256 StringToHash(const std::string &str);
 
-// private:
+    std::string HashToString(const SHA256 &hash);
 
-// };
-
-// }
+}
