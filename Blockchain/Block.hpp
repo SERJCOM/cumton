@@ -10,7 +10,7 @@
 #include <filesystem>
 
 #include "Crypto/Hash.hpp"
-#include "Utilities/CryptoUtilities.h"
+#include "Crypto/CryptoUtilities.h"
 
 namespace cumton::blockchain
 {
@@ -21,11 +21,11 @@ namespace cumton::blockchain
         crypto::SHA256 prev_block;
         crypto::SHA256 merkle_root;
         crypto::SHA256 block_hash;
-        uint32_t timestap;
-        uint32_t bits;
-        uint32_t nonce;
+        uint32_t timestap = 0;
+        uint32_t bits = 0;
+        uint32_t nonce = 0;
         std::vector<transaction::Transaction> transactions;
-        uint64_t block_number;
+        uint64_t block_number = 0;
 
         Block() = default;
 
@@ -52,6 +52,8 @@ namespace cumton::blockchain
         void LoadBlockFromFile(std::filesystem::path path);
 
         void LoadBlockFromString(std::string str);
+
+        std::string SerializeBlockToString();
 
         std::vector<uint8_t> GetBlockBytes();
 
@@ -98,13 +100,12 @@ namespace cumton::blockchain
 
         bool operator==(const Block &block) const 
         {
-            bool flag = false;
-            flag = (version == block.version && prev_block == block.prev_block &&
-            merkle_root == block.merkle_root &&
-            block_hash == block.block_hash &&
-            timestap == block.timestap &&
-            bits == block.bits &&
-            nonce == block.nonce );
+            // bool flag = true;
+            // flag = version == block.version && prev_block == block.prev_block;
+            // flag = flag && merkle_root == block.merkle_root && block_hash == block.block_hash;
+            // flag = flag && timestap == block.timestap && bits == block.bits;
+            // flag = &&
+            // nonce == block.nonce );
 
             // for(int i = 0; i < transactions.size(); i++){
             //     flag = flag && transaction[i] == block[i]
@@ -113,7 +114,9 @@ namespace cumton::blockchain
             // transactions == block.transactions &&
             // block_number == block.block_number );
 
-            return flag;
+            return GetBlockHash() == block.GetBlockHash();
+
+            // return flag;
         }
     };
 

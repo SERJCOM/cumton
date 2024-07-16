@@ -1,12 +1,14 @@
 #include "Hash.hpp"
 
+#include <iostream>
+
 namespace cumton::crypto
 {
 
     SHA256 StringToHash(const std::string &str)
     {
         SHA256 res;
-        for (int i = 0; i < res.size(); i++)
+        for (int i = 0; i < str.size(); i++)
             res[i] = str.at(i);
         return res;
     }
@@ -15,10 +17,12 @@ namespace cumton::crypto
     {
         std::string res;
         res.resize(hash.size());
+
         for (int i = 0; i < hash.size(); i++)
         {
             res[i] = hash.at(i);
         }
+
         return res;
     }
 }

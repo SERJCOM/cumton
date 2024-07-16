@@ -3,7 +3,7 @@
 #include <iostream>
 #include <iomanip>
 
-std::array<unsigned char, SHA256_LENGTH> cumton::utilities::crypto::sha256(const std::string &str)
+cumton::crypto::SHA256 cumton::crypto::sha256(const std::string &str)
 {
     std::array<unsigned char, SHA256_LENGTH> hash;
 
@@ -15,7 +15,7 @@ std::array<unsigned char, SHA256_LENGTH> cumton::utilities::crypto::sha256(const
     return hash;
 }
 
-std::array<uint8_t, SHA256_LENGTH> cumton::utilities::crypto::sha256(const std::vector<uint8_t> &data)
+cumton::crypto::SHA256 cumton::crypto::sha256(const std::vector<uint8_t> &data)
 {
     std::array<unsigned char, SHA256_LENGTH> hash;
 
@@ -27,7 +27,7 @@ std::array<uint8_t, SHA256_LENGTH> cumton::utilities::crypto::sha256(const std::
     return hash;
 }
 
-std::array<uint8_t, SHA256_LENGTH> cumton::utilities::crypto::sha256(void *data, size_t size)
+cumton::crypto::SHA256 cumton::crypto::sha256(void *data, size_t size)
 {
     std::array<unsigned char, SHA256_LENGTH> hash;
 
@@ -39,7 +39,7 @@ std::array<uint8_t, SHA256_LENGTH> cumton::utilities::crypto::sha256(void *data,
     return hash;
 }
 
-std::ostream &operator<<(std::ostream &stream, std::array<unsigned char, SHA256_LENGTH> &sha256)
+std::ostream &operator<<(std::ostream &stream, cumton::crypto::SHA256 &sha256)
 {
     std::stringstream ss;
     for (int i = 0; i < SHA256_DIGEST_LENGTH; ++i)

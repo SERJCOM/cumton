@@ -40,6 +40,31 @@ void cumton::blockchain::Block::LoadBlockFromString(std::string str)
     writer1.attach(str.data(), str.size());
 }
 
+std::string cumton::blockchain::Block::SerializeBlockToString()
+{
+
+    proto::Block block;
+    block.bits = bits;
+    block.block_number = block_number;
+    block.merkle_root = merkle_root;
+    block.nonce = nonce;
+    block.prev_block = prev_block;
+    block.version = version;
+
+    FBE::proto::BlockModel writer;
+    writer.serialize(block);
+
+    std::string res;
+    res.resize(writer.buffer().size());
+
+    for (int i = 0; i < writer.buffer().size(); i++)
+    {
+        res[i] = *(writer.buffer().data() + i);
+    }
+
+    return res;
+}
+
 std::vector<uint8_t> cumton::blockchain::Block::GetBlockBytes()
 {
     proto::Block block;
@@ -69,19 +94,19 @@ std::array<uint8_t, 32> cumton::blockchain::Block::GetBlockHash() const
     SHA256_CTX ctx;
 
     SHA256_Init(&ctx);
-    SHA256_Update(&ctx, (void *)&version, sizeof(version));
-    SHA256_Update(&ctx, (void *)&timestap, sizeof(timestap));
-    SHA256_Update(&ctx, (void *)&bits, sizeof(bits));
-    SHA256_Update(&ctx, (void *)&nonce, sizeof(nonce));
-    SHA256_Update(&ctx, (void *)&block_number, sizeof(block_number));
+    // SHA256_Update(&ctx, (void *)&version, sizeof(version));
+    // SHA256_Update(&ctx, (void *)&timestap, sizeof(timestap));
+    // SHA256_Update(&ctx, (void *)&bits, sizeof(bits));
+    // SHA256_Update(&ctx, (void *)&nonce, sizeof(nonce));
+    // SHA256_Update(&ctx, (void *)&block_number, sizeof(block_number));
     SHA256_Update(&ctx, (void *)prev_block.data(), sizeof(uint8_t) * prev_block.size());
-    SHA256_Update(&ctx, (void *)merkle_root.data(), sizeof(uint8_t) * merkle_root.size());
+    // SHA256_Update(&ctx, (void *)merkle_root.data(), sizeof(uint8_t) * merkle_root.size());
 
-    for (auto &i : transactions)
-    {
-        auto hash = i.GetTransactionHash();
-        SHA256_Update(&ctx, hash.c_str(), sizeof(char) * hash.size());
-    }
+    // for (auto &i : transactions)
+    // {
+    //     auto hash = i.GetTransactionHash();
+    //     SHA256_Update(&ctx, hash.c_str(), sizeof(char) * hash.size());
+    // }
 
     SHA256_Final(hash.data(), &ctx);
 

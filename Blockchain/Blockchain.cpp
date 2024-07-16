@@ -1,7 +1,7 @@
 #include "Blockchain.hpp"
 
 #include "Utilities/CodeGeneration/proto_models.h"
-#include "Utilities/CryptoUtilities.h"
+#include "Crypto/CryptoUtilities.h"
 
 #include <iostream>
 #include <fstream>

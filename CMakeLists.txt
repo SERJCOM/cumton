@@ -8,7 +8,7 @@ find_package(Threads REQUIRED)
 find_package(leveldb REQUIRED)
 
 set(UTILITIES_FILES 
-${CMAKE_SOURCE_DIR}/Utilities/CryptoUtilities.cpp
+
 ${CMAKE_SOURCE_DIR}/Utilities/CodeGeneration/fbe_models.cpp
 ${CMAKE_SOURCE_DIR}/Utilities/CodeGeneration/fbe.cpp
 ${CMAKE_SOURCE_DIR}/Utilities/CodeGeneration/proto_models.cpp
@@ -24,7 +24,7 @@ ${CMAKE_SOURCE_DIR}/Blockchain/Transaction.cpp
 
 set(CRYPTO_FILES 
 ${CMAKE_SOURCE_DIR}/Crypto/Hash.cpp
-
+${CMAKE_SOURCE_DIR}/Crypto/CryptoUtilities.cpp
 )
 
 set(CMAKE_CXX_CPPCHECK "cppcheck")
