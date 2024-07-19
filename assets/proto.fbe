@@ -23,6 +23,7 @@ struct Block(3){
     uint32 nonce;
     // Transaction?[] transactions;
     uint64 block_number; 
+    uint32 height;
 }
 
 struct BlockHashSha256{

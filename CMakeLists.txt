@@ -39,16 +39,16 @@ ${CMAKE_CURRENT_BINARY_DIR}
 )
 
 
-add_executable(cumtonmain CumTon/test.cpp )
+# add_executable(cumtonmain CumTon/test.cpp )
 
-target_link_libraries(cumtonmain PUBLIC OpenSSL::SSL uuid yaml-cpp::yaml-cpp cumton
-Threads::Threads leveldb::leveldb
-)
+# target_link_libraries(cumtonmain PUBLIC OpenSSL::SSL uuid yaml-cpp::yaml-cpp cumton
+# Threads::Threads leveldb::leveldb
+# )
 
-target_include_directories(cumtonmain PRIVATE 
-${CMAKE_SOURCE_DIR}
-${CMAKE_CURRENT_BINARY_DIR}
-)
+# target_include_directories(cumtonmain PRIVATE 
+# ${CMAKE_SOURCE_DIR}
+# ${CMAKE_CURRENT_BINARY_DIR}
+# )
 
 
 

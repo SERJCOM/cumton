@@ -140,11 +140,12 @@ struct Block
     uint32_t bits;
     uint32_t nonce;
     uint64_t block_number;
+    uint32_t height;
 
     size_t fbe_type() const noexcept { return 3; }
 
     Block();
-    Block(uint32_t arg_version, const std::array<uint8_t, 32>& arg_prev_block, const std::array<uint8_t, 32>& arg_merkle_root, uint32_t arg_timestap, uint32_t arg_bits, uint32_t arg_nonce, uint64_t arg_block_number);
+    Block(uint32_t arg_version, const std::array<uint8_t, 32>& arg_prev_block, const std::array<uint8_t, 32>& arg_merkle_root, uint32_t arg_timestap, uint32_t arg_bits, uint32_t arg_nonce, uint64_t arg_block_number, uint32_t arg_height);
     Block(const Block& other) = default;
     Block(Block&& other) = default;
     ~Block() = default;

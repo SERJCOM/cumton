@@ -267,6 +267,7 @@ public:
     FieldModel<uint32_t> bits;
     FieldModel<uint32_t> nonce;
     FieldModel<uint64_t> block_number;
+    FieldModel<uint32_t> height;
 };
 
 namespace proto {

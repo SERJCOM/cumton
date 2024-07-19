@@ -38,6 +38,18 @@ void cumton::blockchain::Block::LoadBlockFromString(std::string str)
 {
     FBE::proto::BlockModel writer1;
     writer1.attach(str.data(), str.size());
+
+    proto::Block block;
+    writer1.deserialize(block);
+
+    bits = block.bits;
+    block_number = block.block_number;
+    merkle_root = block.merkle_root;
+    nonce = block.nonce;
+    version = block.version;
+    height = block.height;
+    prev_block = block.prev_block;
+
 }
 
 std::string cumton::blockchain::Block::SerializeBlockToString()
@@ -50,6 +62,7 @@ std::string cumton::blockchain::Block::SerializeBlockToString()
     block.nonce = nonce;
     block.prev_block = prev_block;
     block.version = version;
+    block.height = height;
 
     FBE::proto::BlockModel writer;
     writer.serialize(block);
@@ -74,6 +87,7 @@ std::vector<uint8_t> cumton::blockchain::Block::GetBlockBytes()
     block.nonce = nonce;
     block.prev_block = prev_block;
     block.version = version;
+    block.height = height;
 
     FBE::proto::BlockModel writer;
     writer.serialize(block);
@@ -122,6 +136,7 @@ void cumton::blockchain::Block::SaveBlockToFile(std::filesystem::path path)
     block.nonce = nonce;
     block.prev_block = prev_block;
     block.version = version;
+    block.height = height;
 
     FBE::proto::BlockModel writer;
     writer.serialize(block);

@@ -460,6 +460,7 @@ FieldModel<::proto::Block>::FieldModel(FBEBuffer& buffer, size_t offset) noexcep
     , bits(buffer, timestap.fbe_offset() + timestap.fbe_size())
     , nonce(buffer, bits.fbe_offset() + bits.fbe_size())
     , block_number(buffer, nonce.fbe_offset() + nonce.fbe_size())
+    , height(buffer, block_number.fbe_offset() + block_number.fbe_size())
 {}
 
 size_t FieldModel<::proto::Block>::fbe_body() const noexcept
@@ -472,6 +473,7 @@ size_t FieldModel<::proto::Block>::fbe_body() const noexcept
         + bits.fbe_size()
         + nonce.fbe_size()
         + block_number.fbe_size()
+        + height.fbe_size()
         ;
     return fbe_result;
 }
@@ -495,6 +497,7 @@ size_t FieldModel<::proto::Block>::fbe_extra() const noexcept
         + bits.fbe_extra()
         + nonce.fbe_extra()
         + block_number.fbe_extra()
+        + height.fbe_extra()
         ;
 
     _buffer.unshift(fbe_struct_offset);
@@ -570,6 +573,12 @@ bool FieldModel<::proto::Block>::verify_fields(size_t fbe_struct_size) const noe
     if (!block_number.verify())
         return false;
     fbe_current_size += block_number.fbe_size();
+
+    if ((fbe_current_size + height.fbe_size()) > fbe_struct_size)
+        return true;
+    if (!height.verify())
+        return false;
+    fbe_current_size += height.fbe_size();
 
     return true;
 }
@@ -652,6 +661,12 @@ void FieldModel<::proto::Block>::get_fields(::proto::Block& fbe_value, size_t fb
     else
         fbe_value.block_number = (uint64_t)0ull;
     fbe_current_size += block_number.fbe_size();
+
+    if ((fbe_current_size + height.fbe_size()) <= fbe_struct_size)
+        height.get(fbe_value.height);
+    else
+        fbe_value.height = (uint32_t)0ull;
+    fbe_current_size += height.fbe_size();
 }
 
 size_t FieldModel<::proto::Block>::set_begin()
@@ -698,6 +713,7 @@ void FieldModel<::proto::Block>::set_fields(const ::proto::Block& fbe_value) noe
     bits.set(fbe_value.bits);
     nonce.set(fbe_value.nonce);
     block_number.set(fbe_value.block_number);
+    height.set(fbe_value.height);
 }
 
 namespace proto {

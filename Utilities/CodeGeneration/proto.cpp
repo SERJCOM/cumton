@@ -102,9 +102,10 @@ Block::Block()
     , bits((uint32_t)0ull)
     , nonce((uint32_t)0ull)
     , block_number((uint64_t)0ull)
+    , height((uint32_t)0ull)
 {}
 
-Block::Block(uint32_t arg_version, const std::array<uint8_t, 32>& arg_prev_block, const std::array<uint8_t, 32>& arg_merkle_root, uint32_t arg_timestap, uint32_t arg_bits, uint32_t arg_nonce, uint64_t arg_block_number)
+Block::Block(uint32_t arg_version, const std::array<uint8_t, 32>& arg_prev_block, const std::array<uint8_t, 32>& arg_merkle_root, uint32_t arg_timestap, uint32_t arg_bits, uint32_t arg_nonce, uint64_t arg_block_number, uint32_t arg_height)
     : version(arg_version)
     , prev_block(arg_prev_block)
     , merkle_root(arg_merkle_root)
@@ -112,6 +113,7 @@ Block::Block(uint32_t arg_version, const std::array<uint8_t, 32>& arg_prev_block
     , bits(arg_bits)
     , nonce(arg_nonce)
     , block_number(arg_block_number)
+    , height(arg_height)
 {}
 
 bool Block::operator==(const Block& other) const noexcept
@@ -136,6 +138,7 @@ void Block::swap(Block& other) noexcept
     swap(bits, other.bits);
     swap(nonce, other.nonce);
     swap(block_number, other.block_number);
+    swap(height, other.height);
 }
 
 std::ostream& operator<<(std::ostream& stream, const Block& value)
@@ -166,6 +169,7 @@ std::ostream& operator<<(std::ostream& stream, const Block& value)
     stream << ",bits="; stream << value.bits;
     stream << ",nonce="; stream << value.nonce;
     stream << ",block_number="; stream << value.block_number;
+    stream << ",height="; stream << value.height;
     stream << ")";
     return stream;
 }

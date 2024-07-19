@@ -1,20 +1,15 @@
 #pragma once
 
-#include <cstdint>
-#include <array>
 #include <filesystem>
 #include <vector>
-#include <map>
-#include <array>
 #include <iostream>
-#include <memory>
-
-#include "Block.hpp"
+#include <memory
+#include "BlockchainDB.hpp"
 #include "Crypto/Hash.hpp"
+#include "Block.hpp"
 
 namespace cumton::blockchain
 {
-
     class BlockChain
     {
     public:
@@ -26,12 +21,8 @@ namespace cumton::blockchain
 
         Block *GetPreviosBlock(const Block &current_block) const;
 
-        friend std::ostream &operator<<(std::ostream &stream, const Block &block)
-        {
-        }
-
     private:
-        std::map<crypto::SHA256, std::unique_ptr<Block>> blockchain_db;
+        std::unique_ptr<IBlockChainDB> blockchain;
     };
 
 }

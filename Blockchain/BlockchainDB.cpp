@@ -12,8 +12,15 @@
 #include <map>
 #include <execution>
 
+#include <iostream>
+
 using namespace cumton::blockchain;
 using namespace cumton;
+
+leveldb::Status GetLevelDbValue(leveldb::DB *db, std::string key, std::string &value)
+{
+    return db->Get(leveldb::ReadOptions(), key, &value);
+}
 
 class BlockChainDB : public cumton::blockchain::IBlockChainDB
 {
@@ -26,26 +33,33 @@ public:
         assert(status.ok());
 
         leveldb::Iterator *it = db->NewIterator(leveldb::ReadOptions());
-        int i = 0;
-        for (it->SeekToFirst(); it->Valid(); it->Next())
+
+        std::string hash;
+        std::string value;
+
+        if (GetLevelDbValue(db, "last_block", hash).ok())
         {
-            crypto::SHA256 hash = crypto::StringToHash(it->key().ToString());
-            i++;
+            last_block = crypto::StringToHash(hash);
+            int i = 0;
+            while (true)
+            {
+                Block temp;
+                if (GetLevelDbValue(db, hash, value).IsNotFound())
+                {
+                    break;
+                }
+                temp.LoadBlockFromString(value);
+                temp.CalculateBlockHash();
+                hash_block[crypto::StringToHash(hash)] = temp;
 
-            std::cout << "hash" << i << " " << hash << std::endl;
-
-            Block temp;
-            temp.LoadBlockFromString(it->value().ToString());
-            // тут может быть UB
-            AddNewBlock(temp);
-            // hash_block[hash] = Block{};
-            // hash_block[hash].LoadBlockFromString(it->value().ToString());
-            
+                hash = crypto::HashToString(temp.prev_block);
+            }
         }
     }
 
     ~BlockChainDB()
     {
+
         for (auto hash_block : hash_block)
         {
             std::string res;
@@ -56,29 +70,41 @@ public:
             }
         }
 
+        db->Put(leveldb::WriteOptions(), "last_block", crypto::HashToString(last_block));
+
         delete db;
     }
 
     bool AddNewBlock(const Block &new_block) override
     {
+        if(hash_block.count(new_block.block_hash) != 0){
+            throw std::logic_error("the block is already present in the database");
+        }
+        
         last_block = new_block.block_hash;
+
         if (hash_block.empty())
         {
-            block_height[new_block.block_hash] = 1;
+            hash_block[new_block.block_hash] = new_block;
+            hash_block[new_block.block_hash].height = 1;
         }
         else
         {
-            block_height[new_block.block_hash] = GetBlockHeight(new_block.prev_block) + 1;
+            hash_block[new_block.block_hash] = new_block;
+            hash_block[new_block.block_hash].height = GetBlockHeight(new_block.prev_block) + 1;
         }
-        hash_block[new_block.block_hash] = new_block;
+    }
+
+    void Clear()
+    {
+        hash_block.clear();
+        last_block.fill(0);
     }
 
     Block GetPreviosBlock(const cumton::crypto::SHA256 &current_block) const override
     {
         return GetBlock(hash_block.at(current_block).prev_block);
     }
-
-    bool EraceLastBlock(const cumton::crypto::SHA256 &block) override {}
 
     size_t GetSize() override
     {
@@ -95,24 +121,24 @@ public:
         return GetBlock(last_block);
     }
 
-    void RemoveBlock() override
-    {
-        crypto::SHA256 temp = GetBlock(last_block).prev_block;
-        hash_block.erase(last_block);
-        block_height.erase(last_block);
-        last_block = temp;
-    }
+    // void RemoveBlock() override
+    // {
+    //     crypto::SHA256 temp = GetBlock(last_block).prev_block;
+    //     hash_block.erase(last_block);
+    //     block_height.erase(last_block);
+    //     last_block = temp;
+    // }
 
     int GetBlockHeight(const crypto::SHA256 &hash) const override
     {
-        auto it = block_height.find(hash);
+        auto it = hash_block.find(hash);
 
-        if (it == block_height.end())
+        if (it == hash_block.end())
         {
             throw std::length_error("there is not such block in blockchain");
         }
 
-        return it->second;
+        return it->second.height;
     }
 
     int GetCommonRelativeHeightBetweenBlocks(const crypto::SHA256 &hash1, const crypto::SHA256 &hash2) const override
@@ -124,8 +150,6 @@ private:
     leveldb::DB *db;
 
     std::map<cumton::crypto::SHA256, Block> hash_block;
-
-    std::map<cumton::crypto::SHA256, int> block_height;
 
     crypto::SHA256 last_block;
 };

@@ -26,6 +26,7 @@ namespace cumton::blockchain
         uint32_t nonce = 0;
         std::vector<transaction::Transaction> transactions;
         uint64_t block_number = 0;
+        int height = 0;
 
         Block() = default;
 
