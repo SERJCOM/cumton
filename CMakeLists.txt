@@ -27,11 +27,11 @@ ${CMAKE_SOURCE_DIR}/Crypto/Hash.cpp
 ${CMAKE_SOURCE_DIR}/Crypto/CryptoUtilities.cpp
 )
 
-set(CMAKE_CXX_CPPCHECK "cppcheck")
+# set(CMAKE_CXX_CPPCHECK "cppcheck")
 
 add_library(cumton ${BLOCKCHAIN_FILES} ${UTILITIES_FILES} ${CRYPTO_FILES})
 
-target_link_libraries(cumton PUBLIC OpenSSL::SSL uuid yaml-cpp::yaml-cpp Threads::Threads leveldb::leveldb)
+target_link_libraries(cumton PUBLIC OpenSSL::SSL uuid yaml-cpp::yaml-cpp Threads::Threads leveldb::leveldb )
 
 target_include_directories(cumton PRIVATE 
 ${CMAKE_SOURCE_DIR}
@@ -60,4 +60,25 @@ target_include_directories(tests PRIVATE
 ${CMAKE_SOURCE_DIR}
 )
 
-# add_custom_target(check ALL COMMAND tests)
+find_package(PkgConfig)
+pkg_check_modules(PC_ZeroMQ QUIET zmq)
+
+find_path(ZeroMQ_INCLUDE_DIR
+        NAMES zmq.hpp
+        PATHS ${PC_ZeroMQ_INCLUDE_DIRS}
+        )
+
+
+find_library(ZeroMQ_LIBRARY
+        NAMES zmq
+        PATHS ${PC_ZeroMQ_LIBRARY_DIRS}
+        )
+
+add_executable(testclient Network/testclient.cpp)
+target_include_directories(testclient PUBLIC ${ZeroMQ_INCLUDE_DIR})
+target_link_libraries(testclient PUBLIC ${ZeroMQ_LIBRARY})
+
+
+add_executable(testserver Network/testserver.cpp)
+target_include_directories(testserver PUBLIC ${ZeroMQ_INCLUDE_DIR})
+target_link_libraries(testserver PUBLIC ${ZeroMQ_LIBRARY})

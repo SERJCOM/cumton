@@ -60,29 +60,7 @@ namespace cumton::blockchain
 
         crypto::SHA256 GetBlockHash() const;
 
-        friend std::ostream &operator<<(std::ostream &stream, Block &block)
-        {
-            stream << "{\n";
-            stream << "Block #" << block.block_number << "\n";
-            stream << "version: " << block.version << "\n";
-            stream << "prev_block hash: " << block.prev_block << "\n";
-            stream << "merkle_root hash: " << block.merkle_root << "\n";
-            stream << "timestap: " << block.timestap << "\n";
-            stream << "bits: " << block.bits << "\n";
-            stream << "nonce: " << block.nonce << "\n";
-            stream << "txn_count: " << block.transactions.size() << "\n";
-            stream << "block hash: " << block.block_hash << "\n";
-
-            stream << "transactions: {" << "\n";
-            for (auto &i : block.transactions)
-            {
-                stream << i;
-            }
-
-            stream << "}\n}";
-
-            return stream;
-        }
+        
 
         Block &operator=(const Block &block)
         {
@@ -122,3 +100,6 @@ namespace cumton::blockchain
     };
 
 }
+
+
+std::ostream &operator<<(std::ostream &stream, cumton::blockchain::Block &block);

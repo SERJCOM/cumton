@@ -151,3 +151,28 @@ void cumton::blockchain::Block::SaveBlockToFile(std::filesystem::path path)
     }
     file.close();
 }
+
+
+std::ostream &operator<<(std::ostream &stream, cumton::blockchain::Block &block)
+{
+    stream << "{\n";
+    stream << "Block #" << block.block_number << "\n";
+    stream << "version: " << block.version << "\n";
+    stream << "prev_block hash: " << block.prev_block << "\n";
+    stream << "merkle_root hash: " << block.merkle_root << "\n";
+    stream << "timestap: " << block.timestap << "\n";
+    stream << "bits: " << block.bits << "\n";
+    stream << "nonce: " << block.nonce << "\n";
+    stream << "txn_count: " << block.transactions.size() << "\n";
+    stream << "block hash: " << block.block_hash << "\n";
+
+    stream << "transactions: {" << "\n";
+    for (auto &i : block.transactions)
+    {
+        stream << i;
+    }
+
+    stream << "}\n}";
+
+    return stream;
+}

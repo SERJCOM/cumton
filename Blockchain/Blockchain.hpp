@@ -3,7 +3,7 @@
 #include <filesystem>
 #include <vector>
 #include <iostream>
-#include <memory
+#include <memory>
 #include "BlockchainDB.hpp"
 #include "Crypto/Hash.hpp"
 #include "Block.hpp"
@@ -20,6 +20,8 @@ namespace cumton::blockchain
         std::vector<Block *> GetNextBlock(const Block &current_block) const;
 
         Block *GetPreviosBlock(const Block &current_block) const;
+
+        void PrintAllBlocks();
 
     private:
         std::unique_ptr<IBlockChainDB> blockchain;

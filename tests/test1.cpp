@@ -46,20 +46,31 @@ TEST_CASE("blockchain db TEST")
         db->Clear();
 
         Block block1;
+        block1.block_number=1;
         block1.prev_block = crypto::sha256("1");
         block1.CalculateBlockHash();
 
         Block block2;
+        block2.block_number = 2;
         block2.prev_block = block1.block_hash;
         block2.CalculateBlockHash();
 
         Block block3;
+        block3.block_number=3;
         block3.prev_block = block2.block_hash;
         block3.CalculateBlockHash();
 
         db->AddNewBlock(block1);
         db->AddNewBlock(block2);
         db->AddNewBlock(block3);
+
+        auto hash =  db->GetLastBlock().block_hash;
+        for(int i = 0; i < db->GetSize(); i++){
+            auto block = db->GetBlock(hash);
+            std::cout << block << std::endl;
+            std::cout << "================ \n" << std::endl;
+            hash = block.prev_block;
+        }
 
         REQUIRE(db->GetSize() == 3);
 
